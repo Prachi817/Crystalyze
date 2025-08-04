@@ -25,8 +25,7 @@ public class BoardPanel extends JPanel
         setPreferredSize(new Dimension(GRID_SIZE * JEWEL_SIZE, GRID_SIZE * JEWEL_SIZE));
         setBackground(new Color(100, 100, 100));
 
-        addMouseListener(new MouseAdapter() 
-        {
+        addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) 
             {
@@ -85,8 +84,7 @@ public class BoardPanel extends JPanel
      */
     private Color getJewelColor(JewelType type) 
     {
-        switch (type) 
-        {
+        switch (type) {
             case RED: return Color.RED;
             case GREEN: return Color.GREEN;
             case BLUE: return Color.BLUE;

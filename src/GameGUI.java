@@ -1,5 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * GameGUI.java
@@ -19,6 +21,7 @@ public class GameGUI extends JFrame {
     public GameGUI() 
     {
         gameController = new GameController(this);
+        
         setTitle("Crystalyze");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
