@@ -1,7 +1,7 @@
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.*;
 
 /**
  * BoardPanel.java
@@ -66,7 +66,7 @@ public class BoardPanel extends JPanel
                 }
             }
         }
-        
+
         Point selected = gameController.getSelectedJewel();
         if (selected != null) 
         {
@@ -93,6 +93,6 @@ public class BoardPanel extends JPanel
             case ORANGE: return new Color(255, 140, 0); 
             case WHITE: return Color.CYAN; 
             default: return Color.BLACK;
-        }
-    }
+        }
+    }
 }

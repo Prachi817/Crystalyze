@@ -1,15 +1,13 @@
-import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import javax.swing.*;
 
 /**
  * GameGUI.java
  * Represents the main window of the game.
  * It sets up the JFrame and contains the main components like the game board and score display.
  */
-public class GameGUI extends JFrame {
-
+public class GameGUI extends JFrame 
+{
     private BoardPanel boardPanel;
     private JLabel scoreLabel;
     private GameController gameController;
@@ -21,7 +19,7 @@ public class GameGUI extends JFrame {
     public GameGUI() 
     {
         gameController = new GameController(this);
-        
+
         setTitle("Crystalyze");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
@@ -47,7 +45,6 @@ public class GameGUI extends JFrame {
         scoreLabel.setForeground(Color.WHITE);
         scorePanel.add(scoreLabel);
         mainPanel.add(scorePanel, BorderLayout.NORTH);
-
         add(mainPanel);
 
         pack(); 
@@ -71,5 +68,5 @@ public class GameGUI extends JFrame {
     public void updateView() 
     {
         boardPanel.repaint();
-    }
+    }
 }
