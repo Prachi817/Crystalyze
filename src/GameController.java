@@ -1,3 +1,5 @@
+import java.awt.Point;
+
 /**
  * GameController.java
  * Acts as the intermediary between the view (GUI) and the model (Board).
