@@ -80,6 +80,6 @@ The project is organized following the principles of the Model-View-Controller (
 
 ## 5. Team Members
 
-* [Shingirai Bhengesa]
-* [Prachi Yadav]
-* [Nahian Tasnim]
+* Shingirai Bhengesa
+* Prachi Yadav
+* Nahian Tasnim
