@@ -1,7 +1,6 @@
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-<<<<<<< HEAD
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
@@ -14,7 +13,8 @@ import javax.swing.*;
 /**
  * Visually represents the game board and handles all animations.
  */
-public class BoardPanel extends JPanel {
+public class BoardPanel extends JPanel 
+{
 
     public static final int GRID_SIZE = 8;
     public static final int JEWEL_SIZE = 60;
@@ -32,69 +32,38 @@ public class BoardPanel extends JPanel {
     private Set<Point> explodingJewels = new HashSet<>();
     private Map<Point, Point> fallingJewels = new HashMap<>();
 
-    public BoardPanel(GameController controller) {
-        this.gameController = controller;
-        setPreferredSize(new Dimension(GRID_SIZE * JEWEL_SIZE, GRID_SIZE * JEWEL_SIZE));
-        setBackground(new Color(30, 30, 30));
-
-        addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                if (gameController.isGameActive() && !gameController.isAnimating()) {
-                    int col = e.getX() / JEWEL_SIZE;
-                    int row = e.getY() / JEWEL_SIZE;
-                    if (row < GRID_SIZE && col < GRID_SIZE) {
-                        gameController.jewelClicked(row, col);
-                    }
-=======
-import javax.swing.*;
-
-/**
- * BoardPanel.java
- * A custom JPanel that visually represents the game board.
- * It handles rendering the jewels and capturing mouse clicks from the player.
- */
-public class BoardPanel extends JPanel 
-{
-    public static final int GRID_SIZE = 8;
-    public static final int JEWEL_SIZE = 60; 
-
-    private GameController gameController;
-
-    /**
-     * Constructor for BoardPanel.
-     * @param controller The game controller to handle user input.
-     */
     public BoardPanel(GameController controller) 
     {
         this.gameController = controller;
         setPreferredSize(new Dimension(GRID_SIZE * JEWEL_SIZE, GRID_SIZE * JEWEL_SIZE));
-        setBackground(new Color(100, 100, 100));
+        setBackground(new Color(30, 30, 30));
 
-        addMouseListener(new MouseAdapter() {
+        addMouseListener(new MouseAdapter() 
+        {
             @Override
             public void mousePressed(MouseEvent e) 
             {
-                int col = e.getX() / JEWEL_SIZE;
-                int row = e.getY() / JEWEL_SIZE;
-
-                if (row < GRID_SIZE && col < GRID_SIZE) 
-                {
-                    gameController.jewelClicked(row, col);
->>>>>>> 0daf8ece0b02e82f2b6c82480a9021416f75dc03
+                if (gameController.isGameActive() && !gameController.isAnimating()) {
+                    int col = e.getX() / JEWEL_SIZE;
+                    int row = e.getY() / JEWEL_SIZE;
+                    if (row < GRID_SIZE && col < GRID_SIZE) 
+                    {
+                        gameController.jewelClicked(row, col);
+                    }
                 }
             }
         });
     }
 
-<<<<<<< HEAD
-    public void animateSwap(Point from, Point to, Runnable onFinish) {
+    public void animateSwap(Point from, Point to, Runnable onFinish) 
+    {
         this.swapFrom = from;
         this.swapTo = to;
         startAnimation(onFinish);
     }
 
-    public void animateHighlight(Set<Point> matches, Runnable onFinish) {
+    public void animateHighlight(Set<Point> matches, Runnable onFinish) 
+    {
         this.highlightingJewels = new HashSet<>(matches);
         startAnimation(() -> {
             highlightingJewels.clear();
@@ -102,7 +71,8 @@ public class BoardPanel extends JPanel
         });
     }
 
-    public void animateDestruction(Set<Point> matches, Runnable onFinish) {
+    public void animateDestruction(Set<Point> matches, Runnable onFinish) 
+    {
         this.destroyingJewels = new HashSet<>(matches);
         startAnimation(() -> {
             destroyingJewels.clear();
@@ -110,7 +80,8 @@ public class BoardPanel extends JPanel
         });
     }
 
-    public void animateExplosion(Set<Point> centers, Runnable onFinish) {
+    public void animateExplosion(Set<Point> centers, Runnable onFinish) 
+    {
         this.explodingJewels = new HashSet<>(centers);
         startAnimation(() -> {
             explodingJewels.clear();
@@ -118,7 +89,8 @@ public class BoardPanel extends JPanel
         });
     }
 
-    public void animateFall(Map<Point, Point> fallMap, Runnable onFinish) {
+    public void animateFall(Map<Point, Point> fallMap, Runnable onFinish) 
+    {
         this.fallingJewels = new HashMap<>(fallMap);
         startAnimation(() -> {
             fallingJewels.clear();
@@ -126,14 +98,18 @@ public class BoardPanel extends JPanel
         });
     }
 
-    private void startAnimation(Runnable onFinish) {
+    private void startAnimation(Runnable onFinish) 
+    {
         animationProgress = 0.0f;
-        if (animationTimer != null && animationTimer.isRunning()) {
+        if (animationTimer != null && animationTimer.isRunning()) 
+        {
             animationTimer.stop();
         }
-        animationTimer = new Timer(ANIMATION_DELAY, e -> {
+        animationTimer = new Timer(ANIMATION_DELAY, e -> 
+        {
             animationProgress += 1.0f / ANIMATION_STEPS;
-            if (animationProgress >= 1.0f) {
+            if (animationProgress >= 1.0f) 
+            {
                 animationTimer.stop();
                 animationProgress = 0.0f;
                 swapFrom = swapTo = null;
@@ -145,7 +121,8 @@ public class BoardPanel extends JPanel
     }
     
     @Override
-    protected void paintComponent(Graphics g) {
+    protected void paintComponent(Graphics g) 
+    {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -153,14 +130,18 @@ public class BoardPanel extends JPanel
         Board board = gameController.getBoard();
         if (board == null) return;
 
+        // **FIX**: Draw the grid lines first
         drawGrid(g2d);
 
         // Draw static jewels
-        for (int r = 0; r < GRID_SIZE; r++) {
-            for (int c = 0; c < GRID_SIZE; c++) {
+        for (int r = 0; r < GRID_SIZE; r++) 
+        {
+            for (int c = 0; c < GRID_SIZE; c++) 
+            {
                 Point p = new Point(r, c);
                 if (isAnimating(p)) continue;
-                if (board.getJewel(r,c) != null) {
+                if (board.getJewel(r,c) != null) 
+                {
                    drawJewel(g2d, board.getJewel(r, c), r, c);
                 }
             }
@@ -174,31 +155,37 @@ public class BoardPanel extends JPanel
 
         // Draw selection highlight
         Point selected = gameController.getSelectedJewel();
-        if (selected != null) {
+        if (selected != null) 
+        {
             g2d.setColor(Color.YELLOW);
             g2d.setStroke(new BasicStroke(3));
             g2d.drawRect(selected.y * JEWEL_SIZE + 2, selected.x * JEWEL_SIZE + 2, JEWEL_SIZE - 4, JEWEL_SIZE - 4);
         }
     }
 
-    private void drawGrid(Graphics2D g2d) {
+    private void drawGrid(Graphics2D g2d) 
+    {
         g2d.setColor(new Color(80, 80, 80));
         g2d.setStroke(new BasicStroke(1));
-        for (int i = 0; i < GRID_SIZE; i++) {
-            for (int j = 0; j < GRID_SIZE; j++) {
+        for (int i = 0; i < GRID_SIZE; i++) 
+        {
+            for (int j = 0; j < GRID_SIZE; j++) 
+            {
                 g2d.drawRect(i * JEWEL_SIZE, j * JEWEL_SIZE, JEWEL_SIZE, JEWEL_SIZE);
             }
         }
     }
 
-    private boolean isAnimating(Point p) {
+    private boolean isAnimating(Point p) 
+    {
         if (swapFrom != null && (p.equals(swapFrom) || p.equals(swapTo))) return true;
         if (destroyingJewels.contains(p)) return true;
         if (fallingJewels.containsKey(p)) return true;
         return false;
     }
 
-    private void drawSwappingJewels(Graphics2D g2d) {
+    private void drawSwappingJewels(Graphics2D g2d) 
+    {
         Jewel j1 = gameController.getBoard().getJewel(swapFrom.x, swapFrom.y);
         Jewel j2 = gameController.getBoard().getJewel(swapTo.x, swapTo.y);
         int x1 = (int) (swapFrom.y * JEWEL_SIZE + (swapTo.y - swapFrom.y) * JEWEL_SIZE * animationProgress);
@@ -209,15 +196,18 @@ public class BoardPanel extends JPanel
         drawJewelAt(g2d, j1, y2, x2, 1.0f);
     }
 
-    private void drawDestroyingJewels(Graphics2D g2d) {
+    private void drawDestroyingJewels(Graphics2D g2d)
+    {
         float scale = 1.0f - animationProgress;
-        for (Point p : destroyingJewels) {
+        for (Point p : destroyingJewels) 
+        {
             Jewel jewel = gameController.getBoard().getJewel(p.x, p.y);
             drawJewelAt(g2d, jewel, p.x * JEWEL_SIZE, p.y * JEWEL_SIZE, scale);
         }
     }
 
-    private void drawExplosion(Graphics2D g2d) {
+    private void drawExplosion(Graphics2D g2d) 
+    {
         g2d.setColor(new Color(255, 200, 50, 150));
         float radius = (JEWEL_SIZE * 1.5f) * animationProgress;
         for (Point p : explodingJewels) {
@@ -227,8 +217,10 @@ public class BoardPanel extends JPanel
         }
     }
 
-    private void drawFallingJewels(Graphics2D g2d) {
-        for (Map.Entry<Point, Point> entry : fallingJewels.entrySet()) {
+    private void drawFallingJewels(Graphics2D g2d) 
+    {
+        for (Map.Entry<Point, Point> entry : fallingJewels.entrySet()) 
+        {
             Point finalPos = entry.getKey();
             Point startPos = entry.getValue();
             Jewel jewel = gameController.getBoard().getJewel(finalPos.x, finalPos.y);
@@ -239,11 +231,13 @@ public class BoardPanel extends JPanel
         }
     }
 
-    private void drawJewel(Graphics2D g, Jewel jewel, int row, int col) {
+    private void drawJewel(Graphics2D g, Jewel jewel, int row, int col) 
+    {
         drawJewelAt(g, jewel, row * JEWEL_SIZE, col * JEWEL_SIZE, 1.0f);
     }
 
-    private void drawJewelAt(Graphics2D g, Jewel jewel, int y, int x, float scale) {
+    private void drawJewelAt(Graphics2D g, Jewel jewel, int y, int x, float scale) 
+    {
         if (jewel == null || scale <= 0) return;
         
         float jewelSize = JEWEL_SIZE * scale;
@@ -256,11 +250,9 @@ public class BoardPanel extends JPanel
         Color baseColor = getJewelColor(jewel.getType());
         Color highlightColor = baseColor.brighter();
         
-        // Draw darker base shape for the "edge"
         g.setColor(baseColor.darker());
         g.fill(shape);
         
-        // Draw smaller, brighter shape on top
         AffineTransform at = AffineTransform.getTranslateInstance(centerX, centerY);
         at.scale(0.85, 0.85);
         at.translate(-centerX, -centerY);
@@ -269,98 +261,49 @@ public class BoardPanel extends JPanel
         g.setPaint(new RadialGradientPaint(centerX, centerY, jewelSize, new float[]{0f, 1f}, new Color[]{highlightColor, baseColor}));
         g.fill(innerShape);
 
-        // Highlight flashing effect
-        if (highlightingJewels.contains(new Point(y / JEWEL_SIZE, x / JEWEL_SIZE)) && (int)(animationProgress * 20) % 2 == 0) {
+      
+        if (highlightingJewels.contains(new Point(y / JEWEL_SIZE, x / JEWEL_SIZE)) && (int)(animationProgress * 20) % 2 == 0) 
+        {
             g.setColor(new Color(255, 255, 255, 150));
             g.fill(shape);
         }
         
-        // Power-up indicator
-        if (jewel.getPowerUp() != PowerUpType.NONE) {
+        if (jewel.getPowerUp() != PowerUpType.NONE) 
+        {
             g.setColor(Color.WHITE);
             g.setStroke(new BasicStroke(3 * scale));
             float powerUpSize = jewelSize * 0.3f;
-            if(jewel.getPowerUp() == PowerUpType.FLAME_GEM) {
+            
+            if(jewel.getPowerUp() == PowerUpType.FLAME_GEM) 
+            {
                  g.draw(new Ellipse2D.Float(centerX - powerUpSize/2, centerY - powerUpSize/2, powerUpSize, powerUpSize));
-            } else {
+            } 
+            
+            else 
+            {
                  g.draw(new Rectangle2D.Float(centerX - powerUpSize/2, centerY - powerUpSize/2, powerUpSize, powerUpSize));
             }
         }
     }
 
-    private Shape createJewelShape(JewelType type, float cx, float cy, float size) {
+    private Shape createJewelShape(JewelType type, float cx, float cy, float size) 
+    {
         float radius = size / 2;
         return new Ellipse2D.Float(cx - radius, cy - radius, size, size);
     }
 
-    private Color getJewelColor(JewelType type) {
-        switch (type) {
-            case RED: return new Color(220, 20, 60);   // Crimson
-            case GREEN: return new Color(0, 201, 87);  // Emerald
-            case BLUE: return new Color(30, 144, 255); // DodgerBlue
-            case YELLOW: return new Color(255, 215, 0); // Gold
-            case PURPLE: return new Color(148, 0, 211); // DarkViolet
-            case ORANGE: return new Color(255, 140, 0); // DarkOrange
-            case WHITE: return new Color(245, 245, 245); // WhiteSmoke
-            default: return Color.BLACK;
-        }
-    }
-}
-=======
-    /**
-     * Overrides the paintComponent method to draw the game board and jewels.
-     * @param g The Graphics object to protect.
-     */
-    @Override
-    protected void paintComponent(Graphics g) 
-    {
-        super.paintComponent(g);
-        Board board = gameController.getBoard();
-        if (board == null) return;
-
-        for (int row = 0; row < GRID_SIZE; row++) 
-        {
-            for (int col = 0; col < GRID_SIZE; col++) 
-            {
-                Jewel jewel = board.getJewel(row, col);
-                if (jewel != null) 
-                {
-                    g.setColor(getJewelColor(jewel.getType()));
-                    g.fillRect(col * JEWEL_SIZE, row * JEWEL_SIZE, JEWEL_SIZE, JEWEL_SIZE);
-
-                    g.setColor(Color.DARK_GRAY);
-                    g.drawRect(col * JEWEL_SIZE, row * JEWEL_SIZE, JEWEL_SIZE, JEWEL_SIZE);
-                }
-            }
-        }
-
-        Point selected = gameController.getSelectedJewel();
-        if (selected != null) 
-        {
-            Graphics2D g2d = (Graphics2D) g;
-            g2d.setColor(Color.YELLOW);
-            g2d.setStroke(new BasicStroke(3));
-            g2d.drawRect(selected.y * JEWEL_SIZE, selected.x * JEWEL_SIZE, JEWEL_SIZE, JEWEL_SIZE);
-        }
-    }
-
-    /**
-     * Maps a JewelType to a specific color for rendering.
-     * @param type The type of the jewel.
-     * @return The color associated with the jewel type.
-     */
     private Color getJewelColor(JewelType type) 
     {
-        switch (type) {
-            case RED: return Color.RED;
-            case GREEN: return Color.GREEN;
-            case BLUE: return Color.BLUE;
-            case YELLOW: return Color.ORANGE; 
-            case PURPLE: return Color.MAGENTA;
+        switch (type) 
+        {
+            case RED: return new Color(220, 20, 60);   
+            case GREEN: return new Color(0, 201, 87);  
+            case BLUE: return new Color(30, 144, 255); 
+            case YELLOW: return new Color(255, 215, 0); 
+            case PURPLE: return new Color(148, 0, 211); 
             case ORANGE: return new Color(255, 140, 0); 
-            case WHITE: return Color.CYAN; 
+            case WHITE: return new Color(245, 245, 245); 
             default: return Color.BLACK;
         }
     }
 }
->>>>>>> 0daf8ece0b02e82f2b6c82480a9021416f75dc03
