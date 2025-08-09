@@ -1,4 +1,5 @@
 import java.awt.*;
+<<<<<<< HEAD
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
@@ -19,22 +20,49 @@ public class GameGUI extends JFrame implements ActionListener
 
     /**
      * Constructor for GameGUI.
+=======
+import javax.swing.*;
+
+/**
+ * GameGUI.java
+ * Represents the main window of the game.
+ * It sets up the JFrame and contains the main components like the game board and score display.
+ */
+public class GameGUI extends JFrame 
+{
+    private BoardPanel boardPanel;
+    private JLabel scoreLabel;
+    private GameController gameController;
+
+    /**
+     * Constructor for GameGUI.
+     * Initializes the game window, controller, and UI components.
+>>>>>>> 0daf8ece0b02e82f2b6c82480a9021416f75dc03
      */
     public GameGUI() 
     {
         gameController = new GameController(this);
 
+<<<<<<< HEAD
         setTitle("Crystalyze - Beta");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
 
         JPanel mainPanel = new JPanel(new BorderLayout(10, 20));
+=======
+        setTitle("Crystalyze");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setResizable(false);
+
+        JPanel mainPanel = new JPanel(new BorderLayout(10, 10));
+>>>>>>> 0daf8ece0b02e82f2b6c82480a9021416f75dc03
         mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         mainPanel.setBackground(new Color(50, 50, 50));
 
         boardPanel = new BoardPanel(gameController);
         mainPanel.add(boardPanel, BorderLayout.CENTER);
 
+<<<<<<< HEAD
         JPanel topPanel = new JPanel(new GridLayout(1, 2, 10, 0));
         topPanel.setOpaque(false);
 
@@ -173,11 +201,39 @@ public class GameGUI extends JFrame implements ActionListener
         }
     }
 
+=======
+        JPanel scorePanel = new JPanel();
+        scorePanel.setBackground(new Color(70, 70, 70));
+        scorePanel.setBorder(BorderFactory.createTitledBorder(
+            BorderFactory.createLineBorder(Color.WHITE),
+            "Score",
+            0, 0,
+            new Font("Arial", Font.BOLD, 14),
+            Color.WHITE
+        ));
+        scoreLabel = new JLabel("0");
+        scoreLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        scoreLabel.setForeground(Color.WHITE);
+        scorePanel.add(scoreLabel);
+        mainPanel.add(scorePanel, BorderLayout.NORTH);
+        add(mainPanel);
+
+        pack(); 
+        setLocationRelativeTo(null); 
+        setVisible(true);
+    }
+
+    /**
+     * Updates the score display on the UI.
+     * @param score The new score to display.
+     */
+>>>>>>> 0daf8ece0b02e82f2b6c82480a9021416f75dc03
     public void updateScore(int score) 
     {
         scoreLabel.setText(String.valueOf(score));
     }
 
+<<<<<<< HEAD
     public void updateStatus(String status, GameMode mode) 
     {
         statusLabel.setText(status);
@@ -196,10 +252,17 @@ public class GameGUI extends JFrame implements ActionListener
         pauseButton.setActionCommand(isPaused ? "RESUME" : "PAUSE");
     }
 
+=======
+    /**
+     * Triggers a repaint of the game board.
+     * This should be called whenever the state of the board changes.
+     */
+>>>>>>> 0daf8ece0b02e82f2b6c82480a9021416f75dc03
     public void updateView() 
     {
         boardPanel.repaint();
     }
+<<<<<<< HEAD
     
     public BoardPanel getBoardPanel() {
         return boardPanel;
@@ -221,3 +284,6 @@ public class GameGUI extends JFrame implements ActionListener
         }
     }
 }
+=======
+}
+>>>>>>> 0daf8ece0b02e82f2b6c82480a9021416f75dc03
