@@ -1,25 +1,31 @@
 /**
- * Jewel.java
- * A simple data class representing a single jewel on the board.
- * It holds the jewel's type.
+ * Represents a single jewel on the board.
+ * Includes a PowerUpType to track special jewels.
  */
 public class Jewel {
 
     private JewelType type;
+    private PowerUpType powerUp;
 
-    /**
-     * Constructor for Jewel.
-     * @param type The type of this jewel.
-     */
     public Jewel(JewelType type) {
-        this.type = type;
+        this(type, PowerUpType.NONE);
     }
 
-    /**
-     * Gets the type of the jewel.
-     * @return The JewelType enum value.
-     */
+    public Jewel(JewelType type, PowerUpType powerUp) {
+        this.type = type;
+        this.powerUp = powerUp;
+    }
+
     public JewelType getType() {
         return type;
     }
+
+    public PowerUpType getPowerUp() {
+        return powerUp;
+    }
+    
+    public void setPowerUp(PowerUpType powerUp) {
+        this.powerUp = powerUp;
+    }
 }
+
