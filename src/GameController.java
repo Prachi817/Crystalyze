@@ -1,109 +1,186 @@
 import java.awt.Point;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
+import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 
 /**
- * GameController.java
- * Acts as the intermediary between the view (GUI) and the model (Board).
- * It processes user input and orchestrates the game logic.
+ * GameController.java 
+ * Manages the game flow, state, and interaction between the model and view.
  */
 public class GameController {
 
-    private Board board;
+    private Game game;
     private GameGUI gui;
-    private Point selectedJewel; // Stores the (row, col) of the first selected jewel
-    private int score;
+    private Point selectedJewel;
+    private boolean isAnimating = false;
+    private Timer gameTimer;
 
-    /**
-     * Constructor for GameController.
-     * @param gui The main GameGUI instance.
-     */
     public GameController(GameGUI gui) {
         this.gui = gui;
-        this.board = new Board();
-        this.selectedJewel = null;
-        this.score = 0;
-        board.populateBoard();
     }
 
-    /**
-     * Handles the logic when a jewel on the board is clicked.
-     * @param row The row of the clicked jewel.
-     * @param col The column of the clicked jewel.
-     */
+    public void startGame(GameMode mode) {
+        this.game = new Game(mode);
+        this.selectedJewel = null;
+        this.isAnimating = false;
+        
+        if (gameTimer != null) gameTimer.stop();
+        
+        if (mode == GameMode.TIMED) {
+            gameTimer = new Timer(1000, e -> updateTimer());
+            gameTimer.start();
+        }
+        
+        updateUI();
+        gui.setPauseButtonText(false);
+        gui.updateView();
+    }
+    
+    private void updateTimer() {
+        if(isPaused()) return;
+        game.decrementTimer();
+        updateUI();
+        if (game.isGameOver()) {
+            endGame();
+        }
+    }
+    
+    private void endGame() {
+        if(gameTimer != null) gameTimer.stop();
+        game.endGame();
+        gui.showGameOverDialog(game.getScore());
+    }
+
+    public void quitCurrentGame() {
+        if (gameTimer != null) gameTimer.stop();
+        if (game != null) game.endGame();
+        isAnimating = false;
+        selectedJewel = null;
+        game = null;
+        updateUI();
+        gui.updateView();
+    }
+
     public void jewelClicked(int row, int col) {
+        if (isAnimating || isPaused()) return;
+
         if (selectedJewel == null) {
-            // First jewel selected
             selectedJewel = new Point(row, col);
         } else {
-            // Second jewel selected, attempt a swap
             Point secondJewelPos = new Point(row, col);
-            if (isAdjacent(selectedJewel, secondJewelPos)) {
+            if (!selectedJewel.equals(secondJewelPos) && getBoard().isAdjacent(selectedJewel, secondJewelPos)) {
+                isAnimating = true;
                 attemptSwap(selectedJewel, secondJewelPos);
             }
-            // Reset selection after an attempt
             selectedJewel = null;
         }
-        // Update the view to show the selection or the result of a swap
         gui.updateView();
     }
-    
-    /**
-     * Attempts to swap two jewels and processes the consequences.
-     * @param p1 The position of the first jewel.
-     * @param p2 The position of the second jewel.
-     */
+
     private void attemptSwap(Point p1, Point p2) {
-        board.swapJewels(p1, p2);
-
-        if (board.hasMatches()) {
-            // Valid swap, process matches
-            processMatches();
-        } else {
-            // Invalid swap, revert
-            board.swapJewels(p1, p2); // Swap back
-        }
+        gui.getBoardPanel().animateSwap(p1, p2, () -> {
+            boolean isValidSwap = getBoard().checkAndPerformSwap(p1, p2);
+            
+            if (isValidSwap) {
+                if (game.getMode() == GameMode.MOVES) {
+                    game.decrementMoves();
+                }
+                processMatches();
+            } else {
+                gui.getBoardPanel().animateSwap(p2, p1, () -> {
+                    isAnimating = false;
+                    gui.updateView();
+                });
+            }
+        });
     }
     
-    /**
-     * Continuously finds and processes matches until the board is stable.
-     */
     private void processMatches() {
-        while (board.hasMatches()) {
-            int points = board.removeMatches();
-            score += points;
-            board.collapseGrid();
-            board.refillGrid();
-            gui.updateScore(score);
-        }
-        gui.updateView();
-    }
+        final AtomicInteger chain = new AtomicInteger(1);
+        
+        Runnable processNextChain = new Runnable() {
+            @Override
+            public void run() {
+                if (game == null) {
+                    isAnimating = false;
+                    return;
+                }
+                
+                Set<Point> matches = getBoard().findAllMatches();
+                
+                // If the board is stable (no more matches)
+                if (matches.isEmpty()) {
+                    // Now check for game over conditions
+                    if (game.isGameOver() || !getBoard().hasValidMoves()) {
+                        SwingUtilities.invokeLater(() -> endGame());
+                    }
+                    isAnimating = false;
+                    return;
+                }
 
-    /**
-     * Checks if two points (jewel positions) are adjacent.
-     * @param p1 The first point.
-     * @param p2 The second point.
-     * @return true if they are adjacent, false otherwise.
-     */
-    private boolean isAdjacent(Point p1, Point p2) {
-        int rowDiff = Math.abs(p1.x - p2.x);
-        int colDiff = Math.abs(p1.y - p2.y);
-        // Adjacent if they are in the same row and adjacent columns,
-        // or in the same column and adjacent rows.
-        return (rowDiff == 1 && colDiff == 0) || (rowDiff == 0 && colDiff == 1);
-    }
+                // If there are matches, continue the animation chain
+                gui.getBoardPanel().animateHighlight(matches, () -> {
+                    Set<Point> explosionCenters = getBoard().getExplosionCenters(matches);
+                    if (!explosionCenters.isEmpty()) {
+                        gui.getBoardPanel().animateExplosion(explosionCenters, () -> {
+                            continueChain(chain, this);
+                        });
+                    } else {
+                        gui.getBoardPanel().animateDestruction(matches, () -> {
+                            continueChain(chain, this);
+                        });
+                    }
+                });
+            }
+        };
 
-    /**
-     * Gets the current board state.
-     * @return The Board object.
-     */
-    public Board getBoard() {
-        return board;
+        processNextChain.run();
     }
     
-    /**
-     * Gets the currently selected jewel's position.
-     * @return The Point of the selected jewel, or null if none is selected.
-     */
-    public Point getSelectedJewel() {
-        return selectedJewel;
+    private void continueChain(AtomicInteger chain, Runnable next) {
+        game.addToScore(getBoard().clearAndCreatePowerUps() * 10 * chain.get());
+        updateUIAndBoard();
+
+        Map<Point, Point> fallMap = getBoard().collapseGrid();
+        gui.getBoardPanel().animateFall(fallMap, () -> {
+            getBoard().refillGrid();
+            updateUIAndBoard();
+            
+            chain.incrementAndGet();
+            SwingUtilities.invokeLater(next);
+        });
     }
+    
+    private void updateUIAndBoard() {
+        SwingUtilities.invokeLater(() -> {
+            updateUI();
+            gui.updateView();
+        });
+    }
+    
+    public void togglePause() {
+        if (game == null || game.isGameOver()) return;
+        game.togglePause();
+        gui.setPauseButtonText(game.isPaused());
+    }
+    
+    private void updateUI() {
+        if (game == null) {
+            gui.updateScore(0);
+            gui.updateStatus("--", null);
+            return;
+        }
+        gui.updateScore(game.getScore());
+        gui.updateStatus(game.getStatusString(), game.getMode());
+    }
+    
+    // Getters
+    public Board getBoard() { return game != null ? game.getBoard() : null; }
+    public Point getSelectedJewel() { return selectedJewel; }
+    public boolean isGameActive() { return game != null && !game.isGameOver(); }
+    public boolean isPaused() { return game != null && game.isPaused(); }
+    public boolean isAnimating() { return isAnimating; }
 }
+
