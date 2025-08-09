@@ -1,2 +1,2 @@
-# CSCI5020_Final-project-_Crystalyze
+# Crystalyze
 final project 
