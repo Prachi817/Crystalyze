@@ -1,6 +1,6 @@
-# Crystalyze
+# Crystalyze 
 
-## 1. Overview
+## 1. Game Overview
 
 Crystalyze is a single-player, tile-matching puzzle game developed in Java with Swing. Inspired by classics like Bejeweled, the game is played on an 8x8 grid filled with colorful jewels. The primary objective is to score points by swapping adjacent jewels to create alignments of three or more identical jewels, either horizontally or vertically.
 
@@ -8,7 +8,7 @@ When a match is made, the jewels are cleared from the board, and new jewels fall
 
 ---
 
-## 2. Features
+## 2. Game Features
 
 This beta version of Crystalyze is fully functional and includes the following features:
 
@@ -61,7 +61,7 @@ To compile and run the project from the command line, follow these steps:
     java Crystalyze
     ```
 
-The game window should now appear, prompting you to select a game mode. i.e either Moves Mode or Timed Mode
+The game window should now appear, prompting you to select a game mode.
 
 ---
 
