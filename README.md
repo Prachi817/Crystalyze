@@ -61,7 +61,7 @@ To compile and run the project from the command line, follow these steps:
     java Crystalyze
     ```
 
-The game window should now appear, prompting you to select a game mode.
+The game window should now appear, prompting you to select a game mode. i.e either Moves Mode or Timed Mode
 
 ---
 
