@@ -16,6 +16,13 @@ This beta version of Crystalyze is fully functional and includes the following f
 * **Two Game Modes:**
     * **Timed Mode:** Players have 2 minutes to achieve the highest score possible.
     * **Moves Mode:** Players have a limited 50 moves to maximize their score.
+
+<div align="center">
+  <img src="screenshots/timed mode.png" alt="Timed Mode" width="45%" />
+  <img src="screenshots/moves mode.png" alt="Moves Mode" width="45%" />
+</div>
+<p align="center"><em>Left: Timed Mode gameplay | Right: Moves Mode gameplay</em></p>
+
 * **Power-Up Jewels:**
     * **Flame Gem:** Created from a 4-jewel match. When matched, it explodes, clearing the 8 surrounding jewels.
     * **Hyper Cube:** Created from a 5-jewel match. When swapped with an adjacent jewel, it clears all jewels of that color from the board.
