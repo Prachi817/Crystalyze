@@ -1,9 +1,7 @@
 import java.util.Random;
 
 /**
- * JewelType.java
- * An enumeration representing the different types of jewels available in the game.
- * Includes a method to get a random jewel type.
+ * An enumeration for the different types of jewels. 
  */
 public enum JewelType {
     RED,
@@ -16,10 +14,6 @@ public enum JewelType {
 
     private static final Random RAND = new Random();
 
-    /**
-     * Returns a random JewelType from the available values.
-     * @return A random JewelType.
-     */
     public static JewelType getRandom() {
         return values()[RAND.nextInt(values().length)];
     }
